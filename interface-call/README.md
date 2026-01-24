@@ -1,0 +1,65 @@
+# Interface Call Example (Solidity)
+
+This example demonstrates how to call a function from one Solidity contract using an **interface**.  
+It shows a simple and common pattern for **cross-contract communication** using Remix IDE.
+
+---
+
+## 📂 Contracts
+
+### 1. Calculator.sol
+A simple contract that exposes an `add` function.
+
+```solidity
+function add(uint a, uint b) external pure returns (uint)
+This contract is deployed first and acts as the target contract.
+
+### 2. MyContract.sol
+This contract uses an interface (ICalculator) to call the add function from the deployed Calculator contract.
+
+The Calculator contract address is passed once via the constructor
+
+callAdd() invokes Calculator.add(5, 3) using the interface
+
+How to Run (Remix IDE)
+Open Remix IDE
+
+Deploy Calculator.sol
+
+Copy the deployed Calculator contract address
+
+Deploy MyContract.sol and pass the Calculator address to the constructor
+
+Call callAdd()
+
+Expected result:
+
+uint256: 8
+
+
+Key Concepts Demonstrated
+
+Solidity interfaces
+
+Cross-contract calls
+
+Constructor-based dependency injection
+
+Difference between pure and view
+
+Remix JavaScript VM compatibility
+
+Notes
+
+Both contracts must be deployed on the same network (Remix VM, Sepolia, etc.)
+
+The interface must exactly match the target contract’s function signatures
+
+This pattern is commonly used in:
+
+Modular smart contracts
+
+Upgradeable systems
+
+DeFi protocols
+
