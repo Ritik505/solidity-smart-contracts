@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract LiquidityPool {
+
+    uint public reserveA;
+    uint public reserveB;
+
+    uint public totalLiquidity;
+    mapping(address => uint) public liquidity;
+
+    //  Add Liquidity
+    function addLiquidity(uint amountA, uint amountB) public returns (uint) {
+        
+        uint liquidityMinted;
+
+        if (totalLiquidity == 0) {
+            // First provider
+            liquidityMinted = amountA;
+        } else {
+            // Maintain ratio
+            liquidityMinted = (amountA * totalLiquidity) / reserveA;
+        }
+
+        reserveA += amountA;
+        reserveB += amountB;
+
+        liquidity[msg.sender] += liquidityMinted;
+        totalLiquidity += liquidityMinted;
+
+        return liquidityMinted;
+    }
+
+    // Remove Liquidity
+    function removeLiquidity(uint amount) public returns (uint, uint) {
+        
+        uint amountA = (amount * reserveA) / totalLiquidity;
+        uint amountB = (amount * reserveB) / totalLiquidity;
+
+        liquidity[msg.sender] -= amount;
+        totalLiquidity -= amount;
+
+        reserveA -= amountA;
+        reserveB -= amountB;
+
+        return (amountA, amountB);
+    }
+
+    //  Swap A → B (with 0.3% fee)
+    function swapAforB(uint amountA) public returns (uint) {
+        
+        uint amountInWithFee = (amountA * 997) / 1000;
+
+        uint amountB = (amountInWithFee * reserveB) / (reserveA + amountInWithFee);
+
+        reserveA += amountA;
+        reserveB -= amountB;
+
+        return amountB;
+    }
+
+    // Price function
+    function getPrice() public view returns (uint) {
+        return (reserveB * 1e18) / reserveA;
+    }
+}
