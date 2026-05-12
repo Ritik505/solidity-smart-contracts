@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StudentRegistry {
+
+    struct Student {
+        uint age;
+        string name;
+    }
+
+    mapping(address => Student) public students;
+    address[] public studentAddresses; 
+
+    function registerStudent(string memory _name, uint _age) public {
+        require(
+            students[msg.sender].age == 0,
+            "Student already registered"
+        );
+
+        students[msg.sender] = Student(_age, _name);
+        studentAddresses.push(msg.sender); 
+    }
+
+    function getStudent(address user)
+        public
+        view
+        returns(uint, string memory)
+    {
+        return (
+            students[user].age,
+            students[user].name
+        );
+    }
+
+    function getTotalStudents()
+        public
+        view
+        returns(uint, string[] memory, uint[] memory)
+    {
+        uint total = studentAddresses.length;
+        string[] memory names = new string[](total);
+        uint[] memory ages = new uint[](total);
+
+        for (uint i = 0; i < total; i++) {
+            Student memory s = students[studentAddresses[i]];
+            names[i] = s.name;
+            ages[i] = s.age;
+        }
+
+        return (total, names, ages);
+    }
+}
