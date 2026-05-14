@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TodoList {
+
+    struct Todo {
+        uint id;
+        string task;
+        bool completed;
+    }
+
+    Todo[] public todos;
+
+    function addTask(string memory _task) public {
+
+        todos.push(
+            Todo(
+                todos.length,
+                _task,
+                false
+            )
+        );
+    }
+
+    function completeTask(uint _id) public {
+
+        require(
+            _id < todos.length,
+            "Invalid task id"
+        );
+
+        todos[_id].completed = true;
+    }
+
+    function getTask(uint _id)
+        public
+        view
+        returns(
+            uint,
+            string memory,
+            bool
+        )
+    {
+        require(
+            _id < todos.length,
+            "Invalid task id"
+        );
+
+        Todo memory todo = todos[_id];
+
+        return (
+            todo.id,
+            todo.task,
+            todo.completed
+        );
+    }
+}
