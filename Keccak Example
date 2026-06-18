@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract KeccakExample {
+    // Generate hash from string
+    function generateHash(string memory text) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(text));
+    }
+
+    // Check deterministic property
+    function checkDeterministic(string memory text) public pure returns (bytes32, bytes32) {
+        bytes32 hash1 = keccak256(abi.encodePacked(text));
+        bytes32 hash2 = keccak256(abi.encodePacked(text));
+        return (hash1, hash2);
+    }
+
+    // Compare two hashes
+    function compareHashes(
+        string memory text1,
+        string memory text2
+    ) public pure returns (bool) {
+        bytes32 hash1 = keccak256(abi.encodePacked(text1));
+        bytes32 hash2 = keccak256(abi.encodePacked(text2));
+        return hash1 == hash2;
+    }
+}
